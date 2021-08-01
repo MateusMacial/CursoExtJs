@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="stylesheet" href="../extjs/resources/css/ext-all.css">
+    <script type="text/javascript" src="../extjs/ext-all.js"></script>
+</head>
+
+<body>
+
+</body>
+<script type="text/javascript">
+    Ext.define('Funcionario', {
+        extend: 'Ext.data.Model',
+
+        fields: [
+            { name: 'nome' }, //tipe: auto
+            { name: 'idade', tipe: 'int' },
+            { name: 'salario', tipe: 'float' },
+            { name: 'ativo', tipe: 'boolean' },
+            { name: 'nasc', tipe: 'date', dateFormat: 'd/m/Y' },
+            { name: 'usuario', tipe: 'string' },
+            {
+                name: 'email', tipe: 'string',
+                convert: function (value, record) {
+                    return record.get('usuario') + '@email.com';
+                }
+            },
+            {name: 'genero', type: 'string'}
+        ],
+
+        validations: [
+			{type: 'presence', field: 'nome'},
+			{type: 'presence', field: 'usuario'},
+			{type: 'presence', field: 'idade'},
+			{type: 'length', field: 'usuario', min: 3, max: 10},
+			{type: 'format', field: 'nome', matcher: /([a-z]+)/},
+			{type: 'inclusion', field: 'genero', list:['F','M']},
+			{type: 'exclusion', field: 'idade', list:[0]},
+		]
+    });
+
+    Ext.onReady(function () {
+        var func = Ext.create('Funcionario', {
+            idade: 0,
+			ativo: true,
+            nome: 'Mateus',
+			usuario: 'mateus',
+			genero: 'M'
+        });
+
+        console.log(func);
+
+		var errors = func.validate();
+
+		console.log(errors.isValid());
+
+		console.log(errors.items);
+
+		console.log(errors.getByField('nome'));
+    });
+</script>
+
+</html>
